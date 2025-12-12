@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com;">
+    <title>Math Fun for Kids - Practice Addition & Subtraction</title>
+    <meta name="description" content="A fun and interactive math practice application for kids to learn addition and subtraction with numbers below 11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A90E2;
+            --success-color: #27AE60;
+            --error-color: #E74C3C;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: var(--primary-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--primary-color);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card.success {
+            background: var(--success-color);
+        }
+
+        .stat-card.error {
+            background: var(--error-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .question-area {
+            background: var(--primary-color);
+            padding: 50px;
+            border-radius: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .question-text {
+            font-size: 4rem;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .answer-section {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .answer-input {
+            font-size: 2.5rem;
+            padding: 20px 30px;
+            border: 4px solid var(--primary-color);
+            border-radius: 20px;
+            text-align: center;
+            width: 150px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+            transform: scale(1.05);
+        }
+
+        .btn {
+            font-size: 1.3rem;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            animation: bounceIn 0.5s ease;
+            display: none;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .feedback.correct {
+            background: var(--success-color);
+            color: white;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: var(--error-color);
+            color: white;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .emoji {
+            font-size: 3rem;
+            display: inline-block;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .accuracy {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Tablet and smaller devices */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+
+            .main-card {
+                padding: 25px;
+                border-radius: 25px;
+            }
+
+            .stats-grid {
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .question-area {
+                padding: 30px 20px;
+            }
+
+            .question-text {
+                font-size: 3rem;
+            }
+
+            .answer-input {
+                font-size: 2rem;
+                width: 120px;
+                padding: 15px 20px;
+            }
+
+            .btn {
+                font-size: 1.1rem;
+                padding: 15px 30px;
+            }
+
+            .feedback {
+                font-size: 1.3rem;
+                padding: 15px;
+            }
+        }
+
+        /* iPhone 13 Pro Max and similar large phones (428x926) */
+        @media (max-width: 430px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .main-card {
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin-bottom: 25px;
+            }
+
+            .stat-card {
+                padding: 12px 8px;
+                border-radius: 15px;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+                margin-bottom: 5px;
+            }
+
+            .stat-value {
+                font-size: 1.8rem;
+            }
+
+            .accuracy {
+                font-size: 1rem;
+                margin-top: 8px;
+            }
+
+            .question-area {
+                padding: 25px 15px;
+                border-radius: 20px;
+                margin-bottom: 20px;
+            }
+
+            .question-text {
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+            }
+
+            .answer-section {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .answer-input {
+                font-size: 1.8rem;
+                width: 100%;
+                max-width: 200px;
+                padding: 15px 20px;
+                border: 3px solid var(--primary-color);
+            }
+
+            .btn {
+                font-size: 1rem;
+                padding: 14px 28px;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 15px;
+            }
+
+            .controls .btn {
+                width: 100%;
+                max-width: none;
+            }
+
+            .feedback {
+                font-size: 1.2rem;
+                padding: 12px;
+                margin-top: 15px;
+            }
+
+            .emoji {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Small phones (iPhone SE, etc.) */
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .question-text {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .answer-input {
+                font-size: 1.6rem;
+                padding: 12px 15px;
+            }
+
+            .btn {
+                font-size: 0.95rem;
+                padding: 12px 24px;
+            }
+        }
+
+        /* Landscape mode for phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                margin-bottom: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+                margin-bottom: 5px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .main-card {
+                padding: 15px;
+            }
+
+            .stats-grid {
+                margin-bottom: 15px;
+            }
+
+            .question-area {
+                padding: 20px 15px;
+                margin-bottom: 15px;
+            }
+
+            .question-text {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+
+            .controls {
+                margin-top: 10px;
+            }
+        }
+
+        /* Improve touch targets for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+
+            .answer-input {
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+
+            .stat-card {
+                touch-action: manipulation;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Math Fun for Kids!</h1>
+            <p>Practice Addition & Subtraction</p>
+        </div>
+
+        <div class="main-card">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Questions</div>
+                    <div class="stat-value" id="total-questions">0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-label">Correct ✓</div>
+                    <div class="stat-value" id="correct-answers">0</div>
+                </div>
+                <div class="stat-card error">
+                    <div class="stat-label">Wrong ✗</div>
+                    <div class="stat-value" id="wrong-answers">0</div>
+                </div>
+            </div>
+
+            <div class="accuracy" id="accuracy">Accuracy: 0%</div>
+
+            <div class="question-area">
+                <div class="question-text" id="question">5 + 3 = ?</div>
+                <div class="answer-section">
+                    <input type="number" id="answer-input" class="answer-input" placeholder="?" autocomplete="off">
+                    <button class="btn btn-primary" id="check-btn" onclick="checkAnswer()">Check Answer</button>
+                </div>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="controls">
+                <button class="btn btn-success" id="next-btn" onclick="generateQuestion()">Next Question →</button>
+                <button class="btn btn-primary" onclick="resetStats()">Reset Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script>
+        // Game state
+        let currentQuestion = {
+            num1: 0,
+            num2: 0,
+            operator: '+',
+            answer: 0
+        };
+
+        let stats = {
+            total: 0,
+            correct: 0,
+            wrong: 0
+        };
+
+        // Load stats from localStorage
+        function loadStats() {
+            const savedStats = localStorage.getItem('mathKidsStats');
+            if (savedStats) {
+                stats = JSON.parse(savedStats);
+                updateStatsDisplay();
+            }
+        }
+
+        // Save stats to localStorage
+        function saveStats() {
+            localStorage.setItem('mathKidsStats', JSON.stringify(stats));
+        }
+
+        // Generate random number between 0 and 10
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 11);
+        }
+
+        // Generate random operator (+ or -)
+        function getRandomOperator() {
+            return Math.random() < 0.5 ? '+' : '-';
+        }
+
+        // Generate new question
+        function generateQuestion() {
+            const nextBtn = document.getElementById('next-btn');
+            const originalText = nextBtn.innerHTML;
+            
+            // Show loading
+            nextBtn.disabled = true;
+            nextBtn.innerHTML = 'Loading... <span class="spinner"></span>';
+            
+            setTimeout(() => {
+                let num1 = getRandomNumber();
+                let num2 = getRandomNumber();
+                let operator = getRandomOperator();
+
+                // For subtraction, ensure num1 >= num2 to avoid negative results
+                if (operator === '-' && num1 < num2) {
+                    [num1, num2] = [num2, num1];
+                }
+
+                currentQuestion = {
+                    num1: num1,
+                    num2: num2,
+                    operator: operator,
+                    answer: operator === '+' ? num1 + num2 : num1 - num2
+                };
+
+                // Update UI
+                document.getElementById('question').textContent = `${num1} ${operator} ${num2} = ?`;
+                document.getElementById('answer-input').value = '';
+                document.getElementById('feedback').style.display = 'none';
+                document.getElementById('feedback').className = 'feedback';
+                document.getElementById('answer-input').focus();
+                
+                // Reset button
+                nextBtn.disabled = false;
+                nextBtn.innerHTML = originalText;
+            }, 300);
+        }
+
+        // Check user's answer
+        function checkAnswer() {
+            const checkBtn = document.getElementById('check-btn');
+            const userAnswer = parseInt(document.getElementById('answer-input').value);
+            const feedbackEl = document.getElementById('feedback');
+
+            if (isNaN(userAnswer)) {
+                feedbackEl.textContent = '⚠️ Please enter a number!';
+                feedbackEl.className = 'feedback incorrect';
+                return;
+            }
+
+            // Show loading
+            const originalText = checkBtn.innerHTML;
+            checkBtn.disabled = true;
+            checkBtn.innerHTML = 'Checking... <span class="spinner"></span>';
+
+            setTimeout(() => {
+                stats.total++;
+
+                if (userAnswer === currentQuestion.answer) {
+                    stats.correct++;
+                    feedbackEl.innerHTML = `<span class="emoji">🎉</span> Awesome! That's correct!`;
+                    feedbackEl.className = 'feedback correct';
+                    
+                    // Auto-generate next question after 1.5 seconds
+                    setTimeout(() => {
+                        generateQuestion();
+                    }, 1500);
+                } else {
+                    stats.wrong++;
+                    feedbackEl.innerHTML = `<span class="emoji">💪</span> Not quite! The answer is ${currentQuestion.answer}. Try the next one!`;
+                    feedbackEl.className = 'feedback incorrect';
+                    
+                    // Auto-generate next question after 2 seconds (give time to see the correct answer)
+                    setTimeout(() => {
+                        generateQuestion();
+                    }, 2000);
+                }
+
+                updateStatsDisplay();
+                saveStats();
+                
+                // Reset button
+                checkBtn.disabled = false;
+                checkBtn.innerHTML = originalText;
+            }, 400);
+        }
+
+        // Update statistics display
+        function updateStatsDisplay() {
+            document.getElementById('total-questions').textContent = stats.total;
+            document.getElementById('correct-answers').textContent = stats.correct;
+            document.getElementById('wrong-answers').textContent = stats.wrong;
+
+            const accuracy = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
+            document.getElementById('accuracy').textContent = `Accuracy: ${accuracy}%`;
+        }
+
+        // Reset statistics
+        function resetStats() {
+            if (confirm('Are you sure you want to reset all statistics?')) {
+                const resetBtn = event.target;
+                const originalText = resetBtn.innerHTML;
+                
+                // Show loading
+                resetBtn.disabled = true;
+                resetBtn.innerHTML = 'Resetting... <span class="spinner"></span>';
+                
+                setTimeout(() => {
+                    // Reset stats object
+                    stats = { total: 0, correct: 0, wrong: 0 };
+                    
+                    // Clear localStorage
+                    localStorage.removeItem('mathKidsStats');
+                    
+                    // Update display
+                    updateStatsDisplay();
+                    
+                    // Generate new question
+                    generateQuestion();
+                    
+                    // Reset button
+                    resetBtn.disabled = false;
+                    resetBtn.innerHTML = originalText;
+                }, 500);
+            }
+        }
+
+        // Handle Enter key press
+        document.getElementById('answer-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize the app
+        loadStats();
+        generateQuestion();
+    </script>
+</body>
+</html>
